@@ -120,13 +120,13 @@ When you press `K` on a port, a confirmation dialog appears:
 +----------------------------------+
 |                                  |
 |  Process: ControlCe              |
-|  PID:     602                   |
+|  PID:     602                    |
 |  Port:    5000                   |
 |                                  |
 |  Are you sure you want to kill   |
 |  this process?                   |
 |                                  |
-|        [Y] KILL    [N] CANCEL   |
+|   [Y] KILL   [N]/[ESC] CANCEL    |
 |                                  |
 +----------------------------------+
 ```
