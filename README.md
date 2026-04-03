@@ -146,6 +146,7 @@ When auto-refresh is enabled (`[AUTO-ON]`), portly automatically scans every 2 s
 - macOS or Linux
 - Node.js 16 or higher
 - `lsof` command (standard on macOS/Linux)
+- Linux only: `xclip` or `xsel` for copy-to-clipboard feature
 
 ---
 

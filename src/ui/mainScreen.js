@@ -1,6 +1,16 @@
 const blessed = require('blessed');
 const { CATEGORY_LABELS } = require('../utils/portScanner');
 
+// Cross-platform clipboard copy
+function copyToClipboard(text) {
+  const exec = require('child_process').exec;
+  const isMac = process.platform === 'darwin';
+  const cmd = isMac 
+    ? `echo "${text}" | pbcopy` 
+    : `echo "${text}" | xclip -selection clipboard 2>/dev/null || echo "${text}" | xsel --clipboard 2>/dev/null || echo "Clipboard not available (install xclip)"`;
+  exec(cmd, () => {});
+}
+
 const STATUS_ICONS = {
   LISTEN: '[L]',
   ESTABLISHED: '[E]',
@@ -511,21 +521,17 @@ class MainScreen {
   }
 
   copyPort() {
-    const exec = require('child_process').exec;
     const port = this.selectedPort.port;
-    exec(`echo ${port} | pbcopy`, () => {
-      this.statusBar.setContent(`Copied port ${port} to clipboard!`);
-      this.renderStatusBar();
-    });
+    copyToClipboard(port);
+    this.statusBar.setContent(`Copied port ${port} to clipboard!`);
+    this.renderStatusBar();
   }
 
   copyPid() {
-    const exec = require('child_process').exec;
     const pid = this.selectedPort.pid;
-    exec(`echo ${pid} | pbcopy`, () => {
-      this.statusBar.setContent(`Copied PID ${pid} to clipboard!`);
-      this.renderStatusBar();
-    });
+    copyToClipboard(pid);
+    this.statusBar.setContent(`Copied PID ${pid} to clipboard!`);
+    this.renderStatusBar();
   }
 }
 
