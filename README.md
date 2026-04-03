@@ -2,7 +2,7 @@
 
 > A CLI tool to explore and manage open ports. Like `lsof`, but with style.
 
-![Terminal](https://img.shields.io/badge/Terminal-macOS-green) ![Terminal](https://img.shields.io/badge/Terminal-Linux-green)
+![Terminal](https://img.shields.io/badge/Terminal-macOS-green) ![Terminal](https://img.shields.io/badge/Terminal-Linux-green) ![Terminal](https://img.shields.io/badge/Terminal-Windows-blue)
 ![npm](https://img.shields.io/badge/npm-yellow)
 
 ## 🚀 Quick Start
@@ -143,10 +143,10 @@ When auto-refresh is enabled (`[AUTO-ON]`), portly automatically scans every 2 s
 
 ## 🛠️ Requirements
 
-- macOS or Linux
+- macOS, Linux, or Windows
 - Node.js 16 or higher
-- `lsof` command (standard on macOS/Linux)
-- Linux only: `xclip` or `xsel` for copy-to-clipboard feature
+- `lsof` command (macOS/Linux, standard on those platforms)
+- `netstat` and `tasklist` commands (Windows, built-in)
 
 ---
 

@@ -5,9 +5,18 @@ const { CATEGORY_LABELS } = require('../utils/portScanner');
 function copyToClipboard(text) {
   const exec = require('child_process').exec;
   const isMac = process.platform === 'darwin';
-  const cmd = isMac 
-    ? `echo "${text}" | pbcopy` 
-    : `echo "${text}" | xclip -selection clipboard 2>/dev/null || echo "${text}" | xsel --clipboard 2>/dev/null || echo "Clipboard not available (install xclip)"`;
+  const isWindows = process.platform === 'win32';
+  
+  let cmd;
+  if (isWindows) {
+    // Windows: use clip command
+    cmd = `echo ${text}| clip`;
+  } else if (isMac) {
+    cmd = `echo "${text}" | pbcopy`;
+  } else {
+    // Linux
+    cmd = `echo "${text}" | xclip -selection clipboard 2>/dev/null || echo "${text}" | xsel --clipboard 2>/dev/null || echo "Clipboard not available (install xclip)"`;
+  }
   exec(cmd, () => {});
 }
 
@@ -505,7 +514,13 @@ class MainScreen {
 
   killProcess(pid) {
     const exec = require('child_process').exec;
-    exec(`kill ${pid}`, (err) => {
+    const isWindows = process.platform === 'win32';
+    
+    const killCmd = isWindows 
+      ? `taskkill /F /PID ${pid}` 
+      : `kill ${pid}`;
+    
+    exec(killCmd, (err) => {
       if (err) {
         this.statusBar.setContent(`Failed to kill PID ${pid}: ${err.message}`);
       } else {
