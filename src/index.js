@@ -4,6 +4,9 @@ const blessed = require('blessed');
 const MainScreen = require('./ui/mainScreen');
 const { scanPorts } = require('./utils/portScanner');
 
+// Disable warnings on startup
+process.emit('warning', { name: 'DeprecationWarning', code: 'DEP', suppress: true });
+
 class Portly {
   constructor() {
     this.screen = null;
@@ -13,11 +16,12 @@ class Portly {
   }
 
   init() {
-    // Create the screen
+    // Create the screen with fallback terminal
     this.screen = blessed.screen({
       smartCSR: true,
       title: 'portly - port explorer',
-      warnings: true,
+      warnings: false,
+      terminal: process.env.TERM || 'xterm',
     });
 
     // Create main screen (binds keys internally)
