@@ -2,8 +2,8 @@
 
 > A CLI tool to explore and manage open ports. Like `lsof`, but with style.
 
-![Terminal](https://img.shields.io/badge/Terminal-macOS-green) ![Terminal](https://img.shields.io/badge/Terminal-Linux-yellow)
-![Node](https://img.shields.io/badge/Node-16+-yellow)
+![Terminal](https://img.shields.io/badge/Terminal-macOS-green) ![Terminal](https://img.shields.io/badge/Terminal-Linux-green)
+![npm](https://img.shields.io/badge/npm-yellow)
 
 ## 🚀 Quick Start
 
