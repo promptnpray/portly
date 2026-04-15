@@ -30,6 +30,12 @@ const STATUS_ICONS = {
   UNKNOWN: '[-]',
 };
 
+// Left-align string to given length, padded with spaces
+function LeftStr(str, len) {
+  const s = String(str || '');
+  return s.length >= len ? s.substring(0, len) : s + ' '.repeat(len - s.length);
+}
+
 class MainScreen {
   constructor(screen, app) {
     this.screen = screen;
@@ -86,7 +92,7 @@ class MainScreen {
       left: 0,
       width: '100%',
       height: '100%-10',
-      style: { fg: 'white' },
+      style: { fg: '#ffffff' },
       scrollable: true,
       focusable: true,
       keys: true,
@@ -279,10 +285,13 @@ class MainScreen {
   }
 
   renderTable() {
-    // Fixed column headers
+    // Column widths (data + 2 spaces gap)
+    const W = { port: 7, proto: 5, state: 7, command: 12, pid: 7, user: 12 };
+    
+    // Fixed column headers - aligned with data row spacing
     this.columnHeader.setContent(
-      'PORT    PROTO  STATE  COMMAND          PID     USER\n' +
-      '--------------------------------------------------------'
+      LeftStr('PORT', W.port) + LeftStr('PROTO', W.proto) + LeftStr('STATE', W.state) + 
+      LeftStr('COMMAND', W.command) + LeftStr('PID', W.pid) + LeftStr('USER', W.user)
     );
     
     // Calculate visible rows based on available space
@@ -294,34 +303,48 @@ class MainScreen {
     // Render only visible portion
     const endIndex = Math.min(this.scrollTop + this.visibleRows, this.ports.length);
     
+    // ANSI color codes for selected row highlight
+    const WHITE = '\x1b[38;5;231m'; // bright white
+    const HIGHLIGHT_BG = '\x1b[48;5;33m'; // blue background
+    const RESET = '\x1b[0m'; // reset
+    
     for (let i = this.scrollTop; i < endIndex; i++) {
       const port = this.ports[i];
       const icon = STATUS_ICONS[port.state] || '[-]';
-      const prefix = i === this.selectedIndex ? '> ' : '  ';
       
+      // Build row with consistent column widths
       const row = 
-        prefix +
-        String(port.port).padEnd(6) + '  ' +
-        String(port.protocol).padEnd(5) + '  ' +
-        icon.padEnd(7) + '  ' +
-        String(port.command || '').substring(0, 15).padEnd(16) + '  ' +
-        String(port.pid || '').padEnd(7) + '  ' +
-        String(port.user || '').substring(0, 10);
+        LeftStr(port.port, W.port) +
+        LeftStr(port.protocol, W.proto) +
+        LeftStr(icon, W.state) +
+        LeftStr(port.command || '', W.command) +
+        LeftStr(port.pid || '', W.pid) +
+        LeftStr(port.user || '', W.user);
       
       lines.push(row);
     }
+    
+    // Apply colors to all rows - white text, blue bg for selected
+    const selectedLineIndex = this.selectedIndex - this.scrollTop;
+    lines.forEach((line, idx) => {
+      if (idx === selectedLineIndex) {
+        lines[idx] = WHITE + HIGHLIGHT_BG + line + RESET;
+      } else {
+        lines[idx] = WHITE + line + RESET;
+      }
+    });
     
     // Add empty lines to fill visible area if needed
     while (lines.length < this.visibleRows) {
       lines.push('');
     }
     
-    // Add scroll indicator
+    // Add scroll indicator - aligned to column widths (total ~50 chars)
     if (this.ports.length > this.visibleRows) {
       const start = this.scrollTop + 1;
       const end = Math.min(this.scrollTop + this.visibleRows, this.ports.length);
       lines.push('');
-      lines.push(`--- [${start}-${end}] of ${this.ports.length} ports ---`);
+      lines.push(`--- [${start}-${end}] of ${this.ports.length} ---`);
     }
     
     this.tableContent.setContent(lines.join('\n'));
