@@ -511,7 +511,7 @@ class MainScreen {
         '',
         '  Are you sure you want to kill this process?',
         '',
-        '        [Y] KILL    [N] CANCEL    [ESC]',
+        '         [Y] KILL    [N]/[ESC] CANCEL',
         '',
       ].join('\n'),
     });
