@@ -286,7 +286,7 @@ class MainScreen {
 
   renderTable() {
     // Column widths (data + 2 spaces gap)
-    const W = { port: 7, proto: 5, state: 7, command: 12, pid: 7, user: 12 };
+    const W = { port: 7, proto: 7, state: 7, command: 11, pid: 7, user: 11};
     
     // Fixed column headers - aligned with data row spacing
     this.columnHeader.setContent(
